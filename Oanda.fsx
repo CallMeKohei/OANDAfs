@@ -241,31 +241,31 @@ module public Oanda =
     // Forex Labs is only used by 'practic api' or 'live api'.
     type ForexLabs (info:Info) =
 
-        member x.get_eco_calendar param =
+        member x.Get_eco_calendar param =
             let endpoint = info.Web + "/labs/v1/calendar"
             let uri = new Uri(endpoint)
             param |> List.iter uri.AddQuery
             Requests(info).requests (uri, "GET")
 
-        member x.get_historical_position_ratios param =
+        member x.Get_historical_position_ratios param =
             let endpoint = info.Web + "/labs/v1/historical_position_ratios"
             let uri = new Uri(endpoint)
             param |> List.iter uri.AddQuery
             Requests(info).requests (uri, "GET")
 
-        member x.get_historical_spreads param =
+        member x.Get_historical_spreads param =
             let endpoint = info.Web + "/labs/v1/spreads"
             let uri = new Uri(endpoint)
             param |> List.iter uri.AddQuery
             Requests(info).requests (uri, "GET")
 
-        member x.get_commitments_of_traders param =
+        member x.Get_commitments_of_traders param =
             let endpoint = info.Web + "/labs/v1/commitments_of_traders"
             let uri = new Uri(endpoint)
             param |> List.iter uri.AddQuery
             Requests(info).requests (uri, "GET")
 
-        member x.get_orderbook param =
+        member x.Get_orderbook param =
             let endpoint = info.Web + "/labs/v1/orderbook_data"
             let uri = new Uri(endpoint)
             param |> List.iter uri.AddQuery

@@ -1,18 +1,18 @@
-namespace Oanda
+// ===========================================================================
+//  FILE    : oandafs.fsx
+//  AUTHOR  : callmekohei <callmekohei at gmail.com>
+//  License : MIT license
+// ===========================================================================
+
+namespace oandafs
 
 open System
-open System.Collections.Generic
-open System.Linq
 open System.Web
-open System.Net
-(* open FSharp.Data *)
-(* open FSharp.Data.JsonExtensions *)
 
-module public Oanda =
-
-
+module Oandafs =
 
     type Environment = Live | Practice | Sandbox
+
     type Info = { Web:string; ID:string; Token:string }
 
     type API () =
@@ -20,13 +20,13 @@ module public Oanda =
 
             {
                 Web   = match env with
-                        | Sandbox  -> "http://api-sandbox.oanda.com"
-                        | Practice -> "https://api-fxpractice.oanda.com"
-                        | Live     -> "https://api-fxtrade.oanda.com"
+                        | Sandbox    -> "http://api-sandbox.oanda.com"
+                        | Practice   -> "https://api-fxpractice.oanda.com"
+                        | Live       -> "https://api-fxtrade.oanda.com"
 
                 ID    = match id with
-                        | Some id -> id
-                        | None    -> ""
+                        | Some id    -> id
+                        | None       -> ""
 
                 Token = match token with
                         | Some token -> token
@@ -151,17 +151,6 @@ module public Oanda =
             let uri = new Uri(endpoint)
             Requests(info).requests (uri, "DELETE")
 
-        (* member x.Close_orders () = *)
-        (*     let endpoint = info.Web + "/v1/accounts/" + info.ID + "/orders" *)
-        (*     let uri = new Uri(endpoint) *)
-        (*     let response = Requests(info).requests (uri, "GET") *)
-        (*     let json = JsonValue.Parse response *)
-        (*     json?orders.AsArray () *)
-        (*     |> Array.map (fun rcd -> rcd?id) *)
-        (*     |> Array.map (fun x -> string x) *)
-        (*     |> Array.rev *)
-        (*     |> Array.map (fun x -> Orders(info).Close_order x) *)
-
 
     type Trades (info:Info) =
 
@@ -185,17 +174,6 @@ module public Oanda =
             let endpoint = info.Web + "/v1/accounts/" + info.ID + "/trades/" + trade_id
             let uri = new Uri(endpoint)
             Requests(info).requests (uri, "DELETE")
-
-        (* member x.Close_trades () = *)
-        (*     let endpoint = info.Web + "/v1/accounts/" + info.ID + "/trades" *)
-        (*     let uri = new Uri(endpoint) *)
-        (*     let response = Request(info).requests (uri, "GET") *)
-        (*     let json = JsonValue.Parse response *)
-        (*     json?trades.AsArray () *)
-        (*     |> Array.map (fun rcd -> rcd?id) *)
-        (*     |> Array.map (fun x -> string x) *)
-        (*     |> Array.rev *)
-        (*     |> Array.map (fun x -> Trades(info).Close_trade x) *)
 
 
     type Positions (info:Info) =
@@ -270,3 +248,50 @@ module public Oanda =
             let uri = new Uri(endpoint)
             param |> List.iter uri.AddQuery
             Requests(info).requests (uri, "GET")
+
+
+    type Period  = {
+        hour   : string * string 
+        hour12 : string * string 
+        day    : string * string 
+        week   : string * string 
+        month  : string * string 
+        month3 : string * string 
+        month6 : string * string 
+        year   : string * string
+    }
+
+    let period : Period = {
+        hour   = ( "period","3600"     )
+        hour12 = ( "period","43200"    )
+        day    = ( "period","86400"    )
+        week   = ( "period","604800"   )
+        month  = ( "period","2592000"  )
+        month3 = ( "period","7776000"  )
+        month6 = ( "period","15552000" )
+        year   = ( "period","31536000" )
+    }
+
+    type Currency  = {
+        GPB_JPY : string * string 
+        GPB_USD : string * string 
+        USD_JPY : string * string 
+    }
+
+    let currency : Currency = {
+        GPB_JPY = ("instrument","GBP_JPY") 
+        GPB_USD = ("instrument","GBP_USD") 
+        USD_JPY = ("instrument","USD_JPY") 
+    }
+
+    type Currencies  = {
+        GBP_JPY : string * string 
+        GBP_USD : string * string 
+        USD_JPY : string * string 
+    }
+
+    let currencies : Currencies = {
+        GBP_JPY = ("instruments","GBP_JPY") 
+        GBP_USD = ("instruments","GBP_USD") 
+        USD_JPY = ("instruments","USD_JPY") 
+    }

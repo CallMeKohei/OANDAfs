@@ -1,116 +1,128 @@
-#OANDAfs
+# OANDAfs
 OANDAfs is a F# wrapper for OANDA's REST API.
 
-##Install
-Using git:
+## Install
 ```
 $ git clone https://github.com/CallMeKohei/OANDAfs.git
 ```
 
-##Usage
+## How to use
 
 ```fsharp
-#load @"./Path/To/Oanda.fsx"
+#load "/path/to/oandafs.fsx"
+open oandafs.Oandafs
 
-module Sample =
-    open Oanda
+let env   = Environment.Live
+let id    = "your id"
+let token = "your personal access token"
+let info  = API().Init( env, id, token )
 
-    let env   = Oanda.Environment.Live
-    let id    = "1234567"
-    let token = "abcdefg...."
-
-    let info = Oanda.API().Init ( env, id, token )
-
-    Oanda.Rates(info).Get_prices [("instruments","EUR_USD")]
-    |> printfn "%A"
+Rates(info).Get_Prices [ currencies.GBP_JPY ]
+|> stdout.WriteLine
 ```
 result
 ```
-"{
-    "prices" : [
-        {
-            "instrument" : "EUR_USD",
-            "time" : "2016-11-02T02:45:00.311716Z",
-            "bid" : 1.10637,
-            "ask" : 1.10645
-        }
-    ]
-}"
+{
+	"prices" : [
+		{
+			"instrument" : "GBP_JPY",
+			"time" : "2017-03-27T00:16:13.742783Z",
+			"bid" : 138.255,
+			"ask" : 138.283
+		}
+	]
+}
 ```
 
 
-##Examples
+## Examples
 see also(en) 'http://developer.oanda.com/rest-live/introduction/'
 
 see also(ja) 'http://developer.oanda.com/docs/jp/'
 
-####Rates
+#### Rates
 ```fsharp
-Oanda.Rates(info).Get_instruments [("accountId","2517138");("instruments","AUD_CAD")]
-Oanda.Rates(info).Get_prices      [("instruments","EUR_USD")]
-Oanda.Rates(info).Get_history     [  ("instrument","EUR_USD")
-                                   ; ("count","2")
-                                   ; ("candleFormat","midpoint")
-                                   ; ("granularity","D")
-                                   ; ("dailyAlignment","0")
-                                   ; ("alignmentTimezone","America/New_York")]
+Rates(info).Get_instruments [("accountId","2517138");("instruments","AUD_CAD")]
+
+Rates(info).Get_prices      [("instruments","EUR_USD")]
+
+Rates(info).Get_history     [    ("instrument","EUR_USD")
+                               ; ("count","2")
+                               ; ("candleFormat","midpoint")
+                               ; ("granularity","D")
+                               ; ("dailyAlignment","0")
+                               ; ("alignmentTimezone","America/New_York")]
 ```
-####Acounts
+#### Acounts
 ```fsharp
-Oanda.Accounts.Get_accounts "oremmy"
-Oanda.Accounts.Get_account  "3082510"
-Oanda.Accounts.Create_test_account
+Accounts.Get_accounts "oremmy"
+Accounts.Get_account  "3082510"
+Accounts.Create_test_account
 ```
 
-####Orders
+#### Orders
 ```fsharp
-Oanda.Orders(info).Create_order [   ("instrument","GBP_JPY")
+Orders(info).Create_order [   ("instrument","GBP_JPY")
                                   ; ("units","1000")
                                   ; ("side","buy")
                                   ; ("type","marketIfTouched")
                                   ; ("price","190")
                                   ; ("expiry","2016-04-01T00:00:00Z")]
-Oanda.Orders(info).Get_orders   ()
-Oanda.Orders(info).Get_order    "10000000017927"
-Oanda.Orders(info).Modify_order "10000000017927" [("price","250")]
-Oanda.Orders(info).Close_order  "10000000017927"
+
+Orders(info).Get_orders   ()
+
+Orders(info).Get_order    "10000000017927"
+
+Orders(info).Modify_order "10000000017927" [("price","250")]
+
+Orders(info).Close_order  "10000000017927"
 ```
 
-####Trades
+#### Trades
 ```fsharp
-Oanda.Trades(info).Get_trades   ()
-Oanda.Trades(info).Get_trade    "10000000017568"
-Oanda.Trades(info).Modify_trade "10000000017568" [("takeProfit","250")]
-Oanda.Trades(info).Close_trade  "10000000017568"
+Trades(info).Get_trades   ()
+
+Trades(info).Get_trade    "10000000017568"
+
+Trades(info).Modify_trade "10000000017568" [("takeProfit","250")]
+
+Trades(info).Close_trade  "10000000017568"
 ```
 
-###Potisions
+### Potisions
 ```fsharp
-Oanda.Positions(info).Get_positions  ()
-Oanda.Positions(info).Get_position   "GBP_JPY"
-Oanda.Positions(info).Close_position "GBP_JPY"
+Positions(info).Get_positions  ()
+
+Positions(info).Get_position   "GBP_JPY"
+
+Positions(info).Close_position "GBP_JPY"
 ```
 
-####Transactions History
+#### Transactions History
 ```fsharp
-Oanda.Transaction(info).Get_transaction_history [("type", "ORDER_CANCEL")]
-Oanda.Transaction(info).Get_transaction         ("10000000017592"))
+Transaction(info).Get_transaction_history [("type", "ORDER_CANCEL")]
+
+Transaction(info).Get_transaction         ("10000000017592"))
 ```
 
-####Forex Labs
+#### Forex Labs
 ```fsharp
-Oanda.ForexLabs(info).get_eco_calendar               [("instrument","EUR_USD");("period","2592000")]
-Oanda.ForexLabs(info).get_historical_position_ratios [("instrument","EUR_USD");("period","86400")]
-Oanda.ForexLabs(info).get_historical_spreads         [("instrument","EUR_USD");("period","3600")]
-Oanda.ForexLabs(info).get_commitments_of_traders     [("instrument","EUR_USD")]
-Oanda.ForexLabs(info).get_orderbook                  [("instrument","EUR_USD");("period","3600")]
+ForexLabs(info).get_eco_calendar               [("instrument","EUR_USD");("period","2592000")]
+
+ForexLabs(info).get_historical_position_ratios [("instrument","EUR_USD");("period","86400")]
+
+ForexLabs(info).get_historical_spreads         [("instrument","EUR_USD");("period","3600")]
+
+ForexLabs(info).get_commitments_of_traders     [("instrument","EUR_USD")]
+
+ForexLabs(info).get_orderbook                  [("instrument","EUR_USD");("period","3600")]
 ```
 
-####Streaming
+#### Streaming
 ```
 not yet
 ```
 
 
-##LICENCE
+## LICENCE
 The MIT License (MIT)

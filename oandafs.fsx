@@ -38,7 +38,7 @@ module Oandafs =
         let uriBuilder = new UriBuilder(url)
         let query = HttpUtility.ParseQueryString(uriBuilder.Query)
 
-        member x.ToString = string uriBuilder.Uri
+        member x.ToString () = string uriBuilder.Uri.OriginalString
 
         member x.Query =
             match uriBuilder.Query with
@@ -70,7 +70,7 @@ module Oandafs =
                 |> List.iter c.Headers.Add
 
             match httpMethod with
-            | "GET" -> c.DownloadString(uri.ToString)
+            | "GET" -> c.DownloadString(uri.ToString())
             | "POST" | "DELETE" | "PATCH" -> c.UploadString (uri.Url, httpMethod, uri.Query)
             | _ -> failwith "error"
 
@@ -250,26 +250,40 @@ module Oandafs =
             Requests(info).requests (uri, "GET")
 
 
+
+    /// Util
+
+
+    let toEET (dt:System.DateTime) : string =
+
+        let toRFC (dt:System.DateTime) : string =
+            System.Xml.XmlConvert.ToString( dt, System.Xml.XmlDateTimeSerializationMode.Utc )
+
+        let easternZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Rome")
+        System.TimeZoneInfo.ConvertTime( dt ,easternZone )
+        |> toRFC
+
+
     type Period  = {
-        hour   : string * string 
-        hour12 : string * string 
-        day    : string * string 
-        week   : string * string 
-        month  : string * string 
-        month3 : string * string 
-        month6 : string * string 
-        year   : string * string
+        Hour   : string * string 
+        Hour12 : string * string 
+        Day    : string * string 
+        Week   : string * string 
+        Month  : string * string 
+        Month3 : string * string 
+        Month6 : string * string 
+        Year   : string * string
     }
 
     let period : Period = {
-        hour   = ( "period","3600"     )
-        hour12 = ( "period","43200"    )
-        day    = ( "period","86400"    )
-        week   = ( "period","604800"   )
-        month  = ( "period","2592000"  )
-        month3 = ( "period","7776000"  )
-        month6 = ( "period","15552000" )
-        year   = ( "period","31536000" )
+        Hour   = ( "period","3600"     )
+        Hour12 = ( "period","43200"    )
+        Day    = ( "period","86400"    )
+        Week   = ( "period","604800"   )
+        Month  = ( "period","2592000"  )
+        Month3 = ( "period","7776000"  )
+        Month6 = ( "period","15552000" )
+        Year   = ( "period","31536000" )
     }
 
     type Currency  = {
@@ -294,4 +308,124 @@ module Oandafs =
         GBP_JPY = ("instruments","GBP_JPY") 
         GBP_USD = ("instruments","GBP_USD") 
         USD_JPY = ("instruments","USD_JPY") 
+    }
+
+    type Granularity = {
+        S5  : string * string
+        S10 : string * string
+        S15 : string * string
+        S30 : string * string 
+        M1  : string * string
+        M2  : string * string
+        M3  : string * string
+        M5  : string * string
+        M10 : string * string
+        M15 : string * string
+        M30 : string * string
+        H1  : string * string
+        H2  : string * string
+        H3  : string * string
+        H4  : string * string
+        H6  : string * string
+        H8  : string * string
+        H12 : string * string
+        D   : string * string
+        W   : string * string
+        M   : string * string
+    }
+
+    let granularity : Granularity = {
+        S5  = ("granularity","S5" )
+        S10 = ("granularity","S10")
+        S15 = ("granularity","S15")
+        S30 = ("granularity","S30")
+        M1  = ("granularity","M1" )
+        M2  = ("granularity","M2" )
+        M3  = ("granularity","M3" )
+        M5  = ("granularity","M5" )
+        M10 = ("granularity","M10")
+        M15 = ("granularity","M15")
+        M30 = ("granularity","M30")
+        H1  = ("granularity","H1" )
+        H2  = ("granularity","H2" )
+        H3  = ("granularity","H3" )
+        H4  = ("granularity","H4" )
+        H6  = ("granularity","H6" )
+        H8  = ("granularity","H8" )
+        H12 = ("granularity","H12")
+        D   = ("granularity","D"  )
+        W   = ("granularity","W"  )
+        M   = ("granularity","M"  )
+    }
+
+    type AlignmentTimezone = {
+        Japan : string * string
+    }
+
+    let alignmentTimezone : AlignmentTimezone = {
+        Japan = ("alignmentTimezone","Japan")
+    }
+
+    type DailyAlignment = {
+        H0  : string * string
+        H1  : string * string
+        H2  : string * string
+        H3  : string * string
+        H4  : string * string
+        H5  : string * string
+        H6  : string * string
+        H7  : string * string
+        H8  : string * string
+        H9  : string * string
+        H10 : string * string
+        H11 : string * string
+        H12 : string * string
+        H13 : string * string
+        H14 : string * string
+        H15 : string * string
+        H16 : string * string
+        H17 : string * string
+        H18 : string * string
+        H19 : string * string
+        H20 : string * string
+        H21 : string * string
+        H22 : string * string
+        H23 : string * string
+    }
+
+    let dailyAlignment : DailyAlignment = {
+        H0  = ("dailyAlignment","0" )
+        H1  = ("dailyAlignment","1" )
+        H2  = ("dailyAlignment","2" )
+        H3  = ("dailyAlignment","3" )
+        H4  = ("dailyAlignment","4" )
+        H5  = ("dailyAlignment","5" )
+        H6  = ("dailyAlignment","6" )
+        H7  = ("dailyAlignment","7" )
+        H8  = ("dailyAlignment","8" )
+        H9  = ("dailyAlignment","9" )
+        H10 = ("dailyAlignment","10")
+        H11 = ("dailyAlignment","11")
+        H12 = ("dailyAlignment","12")
+        H13 = ("dailyAlignment","13")
+        H14 = ("dailyAlignment","14")
+        H15 = ("dailyAlignment","15")
+        H16 = ("dailyAlignment","16")
+        H17 = ("dailyAlignment","17")
+        H18 = ("dailyAlignment","18")
+        H19 = ("dailyAlignment","19")
+        H20 = ("dailyAlignment","20")
+        H21 = ("dailyAlignment","21")
+        H22 = ("dailyAlignment","22")
+        H23 = ("dailyAlignment","23")
+    }
+
+    type IncludeFirst = {
+        True  : string * string
+        False : string * string
+    }
+
+    let includeFirst : IncludeFirst = {
+        True  = ("includeFirst","true" )
+        False = ("includeFirst","false")
     }

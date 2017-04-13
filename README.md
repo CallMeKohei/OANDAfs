@@ -10,7 +10,7 @@ $ git clone https://github.com/CallMeKohei/OANDAfs.git
 
 ```fsharp
 #load "/path/to/oandafs.fsx"
-open oandafs.Oandafs
+open callmekohei.Oandafs
 
 let env   = Environment.Live
 let id    = "your id"

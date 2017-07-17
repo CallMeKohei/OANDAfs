@@ -1,12 +1,15 @@
+[![MIT-LICENSE](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/callmekohei/OANDAfs/blob/master/LICENSE)
+
+
 # OANDAfs
 OANDAfs is a F# wrapper for OANDA's REST API.
 
-## Install
+### Install
 ```
 $ git clone https://github.com/CallMeKohei/OANDAfs.git
 ```
 
-## How to use
+### How to use
 
 ```fsharp
 #load "/path/to/oandafs.fsx"
@@ -21,7 +24,7 @@ Rates(info).Get_Prices [ currencies.GBP_JPY ]
 |> stdout.WriteLine
 ```
 result
-```
+```json
 {
 	"prices" : [
 		{
@@ -35,12 +38,12 @@ result
 ```
 
 
-## Examples
+### Examples
 see also(en) 'http://developer.oanda.com/rest-live/introduction/'
 
 see also(ja) 'http://developer.oanda.com/docs/jp/'
 
-#### Rates
+### Rates
 ```fsharp
 Rates(info).Get_instruments [("accountId","2517138");("instruments","AUD_CAD")]
 
@@ -53,14 +56,14 @@ Rates(info).Get_history     [    ("instrument","EUR_USD")
                                ; ("dailyAlignment","0")
                                ; ("alignmentTimezone","America/New_York")]
 ```
-#### Acounts
+### Acounts
 ```fsharp
 Accounts.Get_accounts "oremmy"
 Accounts.Get_account  "3082510"
 Accounts.Create_test_account
 ```
 
-#### Orders
+### Orders
 ```fsharp
 Orders(info).Create_order [   ("instrument","GBP_JPY")
                                   ; ("units","1000")
@@ -78,7 +81,7 @@ Orders(info).Modify_order "10000000017927" [("price","250")]
 Orders(info).Close_order  "10000000017927"
 ```
 
-#### Trades
+### Trades
 ```fsharp
 Trades(info).Get_trades   ()
 
@@ -98,14 +101,14 @@ Positions(info).Get_position   "GBP_JPY"
 Positions(info).Close_position "GBP_JPY"
 ```
 
-#### Transactions History
+### Transactions History
 ```fsharp
 Transaction(info).Get_transaction_history [("type", "ORDER_CANCEL")]
 
 Transaction(info).Get_transaction         ("10000000017592"))
 ```
 
-#### Forex Labs
+### Forex Labs
 ```fsharp
 ForexLabs(info).get_eco_calendar               [("instrument","EUR_USD");("period","2592000")]
 
@@ -118,11 +121,7 @@ ForexLabs(info).get_commitments_of_traders     [("instrument","EUR_USD")]
 ForexLabs(info).get_orderbook                  [("instrument","EUR_USD");("period","3600")]
 ```
 
-#### Streaming
+### Streaming
 ```
 not yet
 ```
-
-
-## LICENCE
-The MIT License (MIT)
